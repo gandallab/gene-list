@@ -1,0 +1,58 @@
+---
+title: "R Markdown"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+rm(list = ls())
+options(stringsAsFactors = FALSE)
+library(tidyverse)
+library(readxl)
+```
+
+## Import data
+```{r, warning=FALSE, message=FALSE}
+SFARI <- read_csv("./list/SFARI-Gene_genes_01-13-2021release_02-05-2021export.csv")
+SFARI <- filter(SFARI, `gene-score` == 1 | syndromic == 1)
+nrow(SFARI)  # 328 genes
+
+ASD_Sanders <- read_excel("./list/mmc7.xlsx")
+ASD_Sanders <- filter(ASD_Sanders, tadaFdrAscSscExomeSscAgpSmallDel < 0.1)
+nrow(ASD_Sanders)  # 65 genes
+
+ASD_Satterstrom <- read_excel("./list/Satterstrom.xlsx", sheet = 2, skip = 1)
+ASD_Satterstrom <- ASD_Satterstrom %>% slice(-c((nrow(.) - 2):nrow(.)))
+nrow(ASD_Satterstrom)  # 102 genes
+
+ASD_Ruzzo <- read_excel("./list/mmc3.xlsx", sheet = 4)
+ASD_Ruzzo <- filter(ASD_Ruzzo, qval < 0.1)
+ASD_Ruzzo$`HGNC gene symbol` <- gsub('[\"]', '', ASD_Ruzzo$`HGNC gene symbol`)
+nrow(ASD_Ruzzo)  # 69 genes
+
+DDD <- read_excel("./list/41586_2020_2832_MOESM4_ESM.xlsx")
+DDD <- filter(DDD, significant == TRUE)
+nrow(DDD)  # 285 genes
+
+SCZ_SCHEMA <- read_csv("./list/meta_results_2021_02_04_20_01_48.csv")
+SCZ_SCHEMA <- filter(SCZ_SCHEMA, `P meta` < 2.2e-6)
+nrow(SCZ_SCHEMA)  # 10 genes
+
+SCZ_PsychENCODE <- read_csv("./list/INT-17_SCZ_High_Confidence_Gene_List.csv")
+nrow(SCZ_PsychENCODE)  # 321 genes
+
+SCZ_HiC <- read_csv("./list/1-s2.0-S0920996419300891-mmc1.txt")
+nrow(SCZ_HiC)  # 455 genes
+```
+
+## Combine data
+```{r}
+geneset <- list()
+setnames <- c("ASD_Ruzzo", "ASD_Sanders", "ASD_Satterstrom", "DDD",
+              "SCZ_HiC", "SCZ_PsychENCODE", "SCZ_SCHEMA", "SFARI")
+for (i in setnames){
+  geneset[[i]] <- get(i)
+}
+```
+
