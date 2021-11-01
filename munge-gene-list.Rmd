@@ -7,7 +7,6 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 rm(list = ls())
-options(stringsAsFactors = FALSE)
 library(tidyverse)
 library(readxl)
 ```
@@ -44,6 +43,27 @@ nrow(SCZ_PsychENCODE)  # 321 genes
 
 SCZ_HiC <- read_csv("./list/1-s2.0-S0920996419300891-mmc1.txt")
 nrow(SCZ_HiC)  # 455 genes
+
+ASD_ID_DDD_Coe <- read_excel("./list/41588_2018_288_MOESM3_ESM.xlsx", sheet = 2, skip = 4, 
+                             range = "A5:X6891") %>% 
+  drop_na(`Significance                                       (FDR ≤ 5%, count > 1)...24`)
+# 253 genes
+
+SynGO <- read_excel("./list/syngo_annotations.xlsx")
+length(unique(SynGO$`human ortholog gene symbol`))  # 1,225 genes
+
+FMRP <- read_excel("./list/mmc2.xls", sheet = 1, skip = 1)  # 842 genes
+
+CELF4 <- read_excel("./list/pgen.1003067.s004.xlsx") %>% 
+  filter(`iCLIP occupancy` > 0.2)  # 2,803 genes
+
+RBFOX <- read_excel("./list/RBFOX-mmc2.xlsx", sheet = 1, skip = 1) %>% 
+  filter(`Rbfox2 tag count` > 4, 
+         `Rbfox1 tag count` + `Rbfox3 tag count` > 12)
+length(unique(RBFOX$`gene symbol`))  # 2,049 genes
+
+Cancer <- read_tsv("./list/Census_all.tsv") %>% 
+  filter(Tier == 1)  # 576 genes
 ```
 
 ## Combine data
