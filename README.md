@@ -17,3 +17,7 @@ The following is a work-in-progress that contains a list of genes implicated in 
 |[CELF4 binding RNA](./list/mmc2.xls)|2,803|[Wagnon et al. 2012](https://doi.org/10.1371/journal.pgen.1003067)|
 |[RBFOX1 binding RNA](./list/pgen.1003067.s004.xlsx)|2,049|[Weyn-Vanhentenryck et al. 2014](https://doi.org/10.1016/j.celrep.2014.02.005)|
 |[Cancer genes](./list/Census_all.tsv)|576|[COSMIC](https://cancer.sanger.ac.uk/census)|
+|[General disease genes](./list/gencc-submissions.tsv)|2,754|[GenCC](https://search.thegencc.org/)|
+|[Housekeeping genes](./list/HK_genes.txt)|3,804|[Eisenberg et al. 2013](https://www.tau.ac.il/~elieis/HKG/)|
+|[MDEM](./list/MDEM.txt)|70|[Fahrner et al. 2019](https://doi.org/10.1093/hmg/ddz174)|
+|[Disease genes from UKBB WES](./list/41586_2021_4103_MOESM5_ESM.xlsx)|564|[Backman et al. 2021](https://www.nature.com/articles/s41586-021-04103-z)|

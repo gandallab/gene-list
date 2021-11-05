@@ -53,6 +53,9 @@ SynGO <- read_excel("./list/syngo_annotations.xlsx")
 length(unique(SynGO$`human ortholog gene symbol`))  # 1,225 genes
 
 FMRP <- read_excel("./list/mmc2.xls", sheet = 1, skip = 1)  # 842 genes
+# also check out the following:
+# https://www.cell.com/cell/pdf/S0092-8674(14)01105-2.pdf,
+# https://www.cell.com/cell/pdf/S0092-8674(14)01106-4.pdf
 
 CELF4 <- read_excel("./list/pgen.1003067.s004.xlsx") %>% 
   filter(`iCLIP occupancy` > 0.2)  # 2,803 genes
@@ -64,6 +67,16 @@ length(unique(RBFOX$`gene symbol`))  # 2,049 genes
 
 Cancer <- read_tsv("./list/Census_all.tsv") %>% 
   filter(Tier == 1)  # 576 genes
+
+GenCC <- read_csv("./list/gencc-submissions.tsv") %>% 
+  filter(classification_title == "Definitive")  # 2,754 genes
+
+Housekeeping <- read_tsv("./list/HK_genes.txt", col_names = FALSE)  # 3,804 genes
+
+MDEM <- read_tsv("./list/MDEM.txt", col_names = FALSE)  # 70 genes
+
+UKBB_rare <- read_excel("./list/41586_2021_4103_MOESM5_ESM.xlsx", sheet = 3)  
+length(unique(UKBB_rare$Gene))  # 564 genes
 ```
 
 ## Combine data
