@@ -88,13 +88,15 @@ for (i in setnames){
   geneset[[i]] <- get(i)
 }
 
-#SCZ_SCHEMA$symbol <- c("SETD1A", "CUL1", "XPO7", "TRIO", "CACNA1G", "SP4", 
-#                       "GRIA3", "GRIN2A", "HERC1", "RB1CC1")
-#df <- tibble(genes = union_all(ASD_Ruzzo$`HGNC gene symbol`, 
-#                               ASD_Sanders$RefSeqGeneName, 
-#                               ASD_Satterstrom$Gene, 
-#                               DDD$symbol, 
-#                               SCZ_SCHEMA$symbol))
-#write_tsv(df, file = "neuropsychiatric_risk_genes.txt")
+SCZ_SCHEMA$symbol <- c("SETD1A", "CUL1", "XPO7", "TRIO", "CACNA1G", "SP4", 
+                       "GRIA3", "GRIN2A", "HERC1", "RB1CC1")
+df <- tibble(genes = union_all(ASD_Ruzzo$`HGNC gene symbol`, 
+                               ASD_Sanders$RefSeqGeneName, 
+                               ASD_Satterstrom$Gene, 
+                               DDD$symbol, 
+                               SCZ_SCHEMA$symbol,
+                               SFARI$`gene-symbol`,
+                               ASD_ID_DDD_Coe$`Ensembl Symbol`))
+write_tsv(df, file = "risk_genes_brain.txt")
 ```
 
