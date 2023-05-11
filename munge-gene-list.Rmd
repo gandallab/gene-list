@@ -1,6 +1,8 @@
 ---
-title: "R Markdown"
+title: "Compile Gene Lists"
 output: html_document
+editor_options:
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -13,69 +15,71 @@ library(readxl)
 
 ## Import data
 ```{r, warning=FALSE, message=FALSE}
-SFARI <- read_csv("./list/SFARI-Gene_genes_01-13-2021release_02-05-2021export.csv")
+SFARI <- read_csv("list/SFARI-Gene_genes_01-13-2021release_02-05-2021export.csv")
 SFARI <- filter(SFARI, `gene-score` == 1 | syndromic == 1)
 nrow(SFARI)  # 328 genes
 
-ASD_Sanders <- read_excel("./list/mmc7.xlsx")
+ASD_Sanders <- read_excel("list/mmc7.xlsx")
 ASD_Sanders <- filter(ASD_Sanders, tadaFdrAscSscExomeSscAgpSmallDel < 0.1)
 nrow(ASD_Sanders)  # 65 genes
 
-ASD_Satterstrom <- read_excel("./list/Satterstrom.xlsx", sheet = 2, skip = 1)
+ASD_Satterstrom <- read_excel("list/Satterstrom.xlsx", sheet = 2, skip = 1)
 ASD_Satterstrom <- ASD_Satterstrom %>% slice(-c((nrow(.) - 2):nrow(.)))
 nrow(ASD_Satterstrom)  # 102 genes
 
-ASD_Ruzzo <- read_excel("./list/mmc3.xlsx", sheet = 4)
+ASD_Ruzzo <- read_excel("list/mmc3.xlsx", sheet = 4)
 ASD_Ruzzo <- filter(ASD_Ruzzo, qval < 0.1)
 ASD_Ruzzo$`HGNC gene symbol` <- gsub('[\"]', '', ASD_Ruzzo$`HGNC gene symbol`)
 nrow(ASD_Ruzzo)  # 69 genes
 
-DDD <- read_excel("./list/41586_2020_2832_MOESM4_ESM.xlsx")
+DDD <- read_excel("list/41586_2020_2832_MOESM4_ESM.xlsx")
 DDD <- filter(DDD, significant == TRUE)
 nrow(DDD)  # 285 genes
 
-SCZ_SCHEMA <- read_csv("./list/meta_results_2021_02_04_20_01_48.csv")
+SCZ_SCHEMA <- read_csv("list/meta_results_2021_02_04_20_01_48.csv")
 SCZ_SCHEMA <- filter(SCZ_SCHEMA, `P meta` < 2.2e-6)
+SCZ_SCHEMA$symbol <- c("SETD1A", "CUL1", "XPO7", "TRIO", "CACNA1G", "SP4", 
+                       "GRIA3", "GRIN2A", "HERC1", "RB1CC1")
 nrow(SCZ_SCHEMA)  # 10 genes
 
-SCZ_PsychENCODE <- read_csv("./list/INT-17_SCZ_High_Confidence_Gene_List.csv")
+SCZ_PsychENCODE <- read_csv("list/INT-17_SCZ_High_Confidence_Gene_List.csv")
 nrow(SCZ_PsychENCODE)  # 321 genes
 
-SCZ_HiC <- read_csv("./list/1-s2.0-S0920996419300891-mmc1.txt")
+SCZ_HiC <- read_csv("list/1-s2.0-S0920996419300891-mmc1.txt")
 nrow(SCZ_HiC)  # 455 genes
 
-ASD_ID_DDD_Coe <- read_excel("./list/41588_2018_288_MOESM3_ESM.xlsx", sheet = 2, skip = 4, 
+ASD_ID_DDD_Coe <- read_excel("list/41588_2018_288_MOESM3_ESM.xlsx", sheet = 2, skip = 4, 
                              range = "A5:X6891") %>% 
   drop_na(`Significance                                       (FDR ≤ 5%, count > 1)...24`)
 # 253 genes
 
-SynGO <- read_excel("./list/syngo_annotations.xlsx")
+SynGO <- read_excel("list/syngo_annotations.xlsx")
 length(unique(SynGO$`human ortholog gene symbol`))  # 1,225 genes
 
-FMRP <- read_excel("./list/mmc2.xls", sheet = 1, skip = 1)  # 842 genes
+FMRP <- read_excel("list/mmc2.xls", sheet = 1, skip = 1)  # 842 genes
 # also check out the following:
 # https://www.cell.com/cell/pdf/S0092-8674(14)01105-2.pdf,
 # https://www.cell.com/cell/pdf/S0092-8674(14)01106-4.pdf
 
-CELF4 <- read_excel("./list/pgen.1003067.s004.xlsx") %>% 
+CELF4 <- read_excel("list/pgen.1003067.s004.xlsx") %>% 
   filter(`iCLIP occupancy` > 0.2)  # 2,803 genes
 
-RBFOX <- read_excel("./list/RBFOX-mmc2.xlsx", sheet = 1, skip = 1) %>% 
+RBFOX <- read_excel("list/RBFOX-mmc2.xlsx", sheet = 1, skip = 1) %>% 
   filter(`Rbfox2 tag count` > 4, 
          `Rbfox1 tag count` + `Rbfox3 tag count` > 12)
 length(unique(RBFOX$`gene symbol`))  # 2,049 genes
 
-Cancer <- read_tsv("./list/Census_all.tsv") %>% 
+Cancer <- read_tsv("list/Census_all.tsv") %>% 
   filter(Tier == 1)  # 576 genes
 
-GenCC <- read_csv("./list/gencc-submissions.tsv") %>% 
+GenCC <- read_csv("list/gencc-submissions.tsv") %>% 
   filter(classification_title == "Definitive")  # 2,754 genes
 
-Housekeeping <- read_tsv("./list/HK_genes.txt", col_names = FALSE)  # 3,804 genes
+Housekeeping <- read_tsv("list/HK_genes.txt", col_names = FALSE)  # 3,804 genes
 
-MDEM <- read_tsv("./list/MDEM.txt", col_names = FALSE)  # 70 genes
+MDEM <- read_tsv("list/MDEM.txt", col_names = FALSE)  # 70 genes
 
-UKBB_rare <- read_excel("./list/41586_2021_4103_MOESM5_ESM.xlsx", sheet = 3)  
+UKBB_rare <- read_excel("list/41586_2021_4103_MOESM5_ESM.xlsx", sheet = 3)  
 length(unique(UKBB_rare$Gene))  # 564 genes
 ```
 
@@ -87,16 +91,17 @@ setnames <- c("ASD_Ruzzo", "ASD_Sanders", "ASD_Satterstrom", "DDD",
 for (i in setnames){
   geneset[[i]] <- get(i)
 }
-
-SCZ_SCHEMA$symbol <- c("SETD1A", "CUL1", "XPO7", "TRIO", "CACNA1G", "SP4", 
-                       "GRIA3", "GRIN2A", "HERC1", "RB1CC1")
-df <- tibble(genes = union_all(ASD_Ruzzo$`HGNC gene symbol`, 
-                               ASD_Sanders$RefSeqGeneName, 
-                               ASD_Satterstrom$Gene, 
-                               DDD$symbol, 
-                               SCZ_SCHEMA$symbol,
-                               SFARI$`gene-symbol`,
-                               ASD_ID_DDD_Coe$`Ensembl Symbol`))
-write_tsv(df, file = "risk_genes_brain.txt")
+geneset
 ```
 
+```{r}
+df <- tibble(genes = unique(c(ASD_Ruzzo$`HGNC gene symbol`, 
+                              ASD_Sanders$RefSeqGeneName, 
+                              ASD_Satterstrom$Gene, 
+                              DDD$symbol, 
+                              SCZ_SCHEMA$symbol,
+                              SFARI$`gene-symbol`,
+                              ASD_ID_DDD_Coe$`Ensembl Symbol`)))
+df
+write_tsv(df, file = "output/risk_genes_brain.txt")
+```

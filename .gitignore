@@ -1,3 +1,4 @@
-munge-gene-list.html
 .DS_Store
 .Rhistory
+*.Rproj
+.Rproj.user
