@@ -13,7 +13,8 @@ library(tidyverse)
 library(readxl)
 ```
 
-## Import data
+## Import Data
+
 ```{r, warning=FALSE, message=FALSE}
 SFARI <- read_csv("list/SFARI-Gene_genes_01-13-2021release_02-05-2021export.csv")
 SFARI <- filter(SFARI, `gene-score` == 1 | syndromic == 1)
@@ -48,21 +49,23 @@ nrow(SCZ_PsychENCODE)  # 321 genes
 SCZ_HiC <- read_csv("list/1-s2.0-S0920996419300891-mmc1.txt")
 nrow(SCZ_HiC)  # 455 genes
 
-ASD_ID_DDD_Coe <- read_excel("list/41588_2018_288_MOESM3_ESM.xlsx", sheet = 2, skip = 4, 
-                             range = "A5:X6891") %>% 
+ASD_ID_DDD_Coe <- read_excel("list/41588_2018_288_MOESM3_ESM.xlsx",
+                             sheet = 2, skip = 4,range = "A5:X6891") %>% 
   drop_na(`Significance                                       (FDR ≤ 5%, count > 1)...24`)
-# 253 genes
+nrow(ASD_ID_DDD_Coe)  # 253 genes
 
 SynGO <- read_excel("list/syngo_annotations.xlsx")
 length(unique(SynGO$`human ortholog gene symbol`))  # 1,225 genes
 
-FMRP <- read_excel("list/mmc2.xls", sheet = 1, skip = 1)  # 842 genes
+FMRP <- read_excel("list/mmc2.xls", sheet = 1, skip = 1)
 # also check out the following:
 # https://www.cell.com/cell/pdf/S0092-8674(14)01105-2.pdf,
 # https://www.cell.com/cell/pdf/S0092-8674(14)01106-4.pdf
+nrow(FMRP)  # 842 genes
 
 CELF4 <- read_excel("list/pgen.1003067.s004.xlsx") %>% 
-  filter(`iCLIP occupancy` > 0.2)  # 2,803 genes
+  filter(`iCLIP occupancy` > 0.2)
+nrow(CELF4)  # 2,803 genes
 
 RBFOX <- read_excel("list/RBFOX-mmc2.xlsx", sheet = 1, skip = 1) %>% 
   filter(`Rbfox2 tag count` > 4, 
@@ -70,38 +73,38 @@ RBFOX <- read_excel("list/RBFOX-mmc2.xlsx", sheet = 1, skip = 1) %>%
 length(unique(RBFOX$`gene symbol`))  # 2,049 genes
 
 Cancer <- read_tsv("list/Census_all.tsv") %>% 
-  filter(Tier == 1)  # 576 genes
+  filter(Tier == 1)
+nrow(Cancer)  # 576 genes
 
 GenCC <- read_csv("list/gencc-submissions.tsv") %>% 
-  filter(classification_title == "Definitive")  # 2,754 genes
+  filter(classification_title == "Definitive")
+nrow(GenCC)  # 2,754 genes
 
-Housekeeping <- read_tsv("list/HK_genes.txt", col_names = FALSE)  # 3,804 genes
+Housekeeping <- read_tsv("list/HK_genes.txt", col_names = FALSE)
+nrow(Housekeeping)  # 3,804 genes
 
-MDEM <- read_tsv("list/MDEM.txt", col_names = FALSE)  # 70 genes
+MDEM <- read_tsv("list/MDEM.txt", col_names = FALSE)
+nrow(MDEM)  # 70 genes
 
 UKBB_rare <- read_excel("list/41586_2021_4103_MOESM5_ESM.xlsx", sheet = 3)  
 length(unique(UKBB_rare$Gene))  # 564 genes
 ```
 
-## Combine data
-```{r}
-geneset <- list()
-setnames <- c("ASD_Ruzzo", "ASD_Sanders", "ASD_Satterstrom", "DDD",
-              "SCZ_HiC", "SCZ_PsychENCODE", "SCZ_SCHEMA", "SFARI")
-for (i in setnames){
-  geneset[[i]] <- get(i)
-}
-geneset
-```
+## Combine Data
 
 ```{r}
-df <- tibble(genes = unique(c(ASD_Ruzzo$`HGNC gene symbol`, 
-                              ASD_Sanders$RefSeqGeneName, 
-                              ASD_Satterstrom$Gene, 
-                              DDD$symbol, 
-                              SCZ_SCHEMA$symbol,
-                              SFARI$`gene-symbol`,
-                              ASD_ID_DDD_Coe$`Ensembl Symbol`)))
+geneset <- list(
+  "ASD_Ruzzo"       = ASD_Ruzzo$`HGNC gene symbol`,
+  "ASD_Sanders"     = ASD_Sanders$RefSeqGeneName,
+  "ASD_Satterstrom" = ASD_Satterstrom$Gene,
+  "DDD"             = DDD$symbol,
+  "SCZ_SCHEMA"      = SCZ_SCHEMA$symbol,
+  "SFARI"           = SFARI$`gene-symbol`,
+  "ASD_ID_DDD_Coe"  = ASD_ID_DDD_Coe$`Ensembl Symbol`
+)
+
+df <- map_dfr(geneset, ~tibble(gene = .), .id = "source") %>% relocate(gene)
 df
-write_tsv(df, file = "output/risk_genes_brain.txt")
+
+write_tsv(df, file = "output/risk_genes_brain.tsv")
 ```
