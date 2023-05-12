@@ -5,7 +5,7 @@ The goal of this repository is to maintain a list of genes implicated in a range
 ## Important files
 
 * [list](list/) - Directory containing downloaded lists.
-* [output/risk_genes_brain.tsv](output/risk_genes_brain.txt) - The final merged list.
+* [output/risk_genes_brain.tsv](output/risk_genes_brain.tsv) - The final merged list.
 * [munge-gene-list.Rmd](munge-gene-list.Rmd) An R Markdown document that imports downloaded lists and generates the merged list.
 
 ## Sources
